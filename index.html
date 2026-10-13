@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONFIANZA CONSTRUCTION DESIGN & BUILD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        /* PRINT SPECIFIC STYLES - PERFECT CENTER ALIGNMENT & HIDDEN HEADERS */
+        @media print {
+            @page {
+                margin: 1cm; /* Disables default browser top/bottom headers & footers */
+            }
+            aside, header, .no-print { 
+                display: none !important; 
+            }
+            main { 
+                padding: 0 !important; 
+                margin: 0 auto !important; 
+                width: 100% !important; 
+                display: block !important;
+            }
+            .px-10 {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            .bg-white { 
+                border: none !important; 
+                box-shadow: none !important; 
+                padding: 0 !important; 
+                width: 100% !important;
+            }
+            .print-header { 
+                display: block !important; 
+                text-align: center !important; 
+                margin-bottom: 2rem !important; 
+                margin-top: 0.5rem !important;
+                width: 100% !important;
+            }
+            body { 
+                background: white !important; 
+            }
+            table {
+                width: 100% !important;
+                margin: 0 auto !important;
+            }
+        }
+        
+        .print-header { display: none; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR (DARK NAVY THEME) -->
+    <aside class="w-64 bg-[#0b1329] text-slate-300 flex flex-col shrink-0 z-20">
+        <!-- BRAND LOGO -->
+        <div class="p-6 flex items-center space-x-3">
+            <div class="bg-[#0088ff] text-white p-2 rounded-xl flex items-center justify-center">
+                <i class="fa-solid fa-boxes-stacked text-lg"></i>
+            </div>
+            <h1 class="font-bold text-white text-xl tracking-tight">SupplyChain<span class="text-[#0088ff]">Hub</span></h1>
+        </div>
+
+        <!-- NAVIGATION LINKS -->
+        <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto">
+            <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 mt-2">Main Menu</p>
+            
+            <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all bg-[#0088ff] text-white shadow-md">
+                <i class="fa-solid fa-chart-pie w-6 mr-1"></i> Dashboard
+            </a>
+            
+            <a href="#" onclick="switchTab('inventory')" id="nav-inventory" class="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-[#162244] hover:text-white">
+                <i class="fa-solid fa-warehouse w-6 mr-1"></i> Bodega Inventory
+            </a>
+            
+            <a href="#" onclick="switchTab('po')" id="nav-po" class="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-[#162244] hover:text-white">
+                <i class="fa-solid fa-file-invoice-dollar w-6 mr-1"></i> Site Purchase Orders
+            </a>
+            
+            <a href="#" onclick="switchTab('prices')" id="nav-prices" class="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-[#162244] hover:text-white">
+                <i class="fa-solid fa-tags w-6 mr-1"></i> Per-Site Price Tracker
+            </a>
+            
+            <a href="#" onclick="switchTab('suppliers')" id="nav-suppliers" class="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-[#162244] hover:text-white">
+                <i class="fa-solid fa-truck-field w-6 mr-1"></i> Suppliers Directory
+            </a>
+        </nav>
+
+        <!-- FOOTER PERSISTENCE -->
+        <div class="p-4 border-t border-slate-800/60 bg-[#070d1e]">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Data Persistence:</span>
+                <span class="text-emerald-400 font-medium flex items-center gap-1">
+                    <i class="fa-solid fa-database text-[10px]"></i> LocalStorage
+                </span>
+            </div>
+            <button onclick="resetData()" class="w-full py-2 bg-[#162244] hover:bg-[#1e2e5c] text-slate-300 rounded-lg text-xs font-medium transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate-right text-[10px]"></i> Reset Demo Data
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[#f8fafc]">
+        
+        <!-- TOP NAVBAR -->
+        <header class="h-20 flex items-center justify-between px-10 bg-transparent shrink-0 no-print">
+            <h2 id="page-title" class="text-2xl font-bold text-slate-900 tracking-tight">Dashboard Overview</h2>
+            
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center gap-3 pl-2">
+                    <div class="h-10 w-10 bg-[#1e293b] text-white rounded-full flex items-center justify-center font-bold text-sm shadow-sm">
+                        AD
+                    </div>
+                    <span class="text-sm font-semibold text-slate-800">Admin User</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CARD CONTAINER -->
+        <div class="px-10 pb-10 flex-1">
+            <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-[0_4px_25px_-5px_rgba(0,0,0,0.03)] space-y-8 mx-auto">
+
+                <!-- PRINT HEADER (CENTERED - MAIN TITLE ONLY) -->
+                <div class="print-header text-center w-full">
+                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-wider uppercase text-center">CONFIANZA CONSTRUCTION DESIGN & BUILD</h1>
+                    <div class="border-b-2 border-slate-800 w-full mt-4 mb-6"></div>
+                </div>
+
+                <!-- ================= TAB 1: DASHBOARD ================= -->
+                <div id="tab-dashboard" class="space-y-8">
+                    
+                    <!-- WELCOME & PO SPENDING BANNER -->
+                    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+                        <div class="space-y-1.5 z-10">
+                            <span class="px-3 py-1 bg-blue-500/20 text-blue-300 text-xs font-semibold rounded-full border border-blue-400/20 inline-block mb-1">
+                                System Overview
+                            </span>
+                            <h3 class="text-2xl font-bold tracking-tight">Welcome back, Admin!</h3>
+                            <p class="text-slate-400 text-xs sm:text-sm max-w-xl">
+                                Real-time summary of your Bodega Stock levels, Purchase Orders, Site Materials, and Vendor Directory.
+                            </p>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 sm:p-5 min-w-[240px] z-10 shrink-0">
+                            <p class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Total PO Spending</p>
+                            <h4 id="stat-total-spending" class="text-2xl font-extrabold text-emerald-400 mt-1">₱0.00</h4>
+                            <p class="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-trend-up text-emerald-400"></i> Tracked across all sites
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- KPI METRICS GRID -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Card 1 -->
+                        <div class="bg-slate-50 hover:bg-white border border-slate-200/80 rounded-2xl p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 group">
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                    <i class="fa-solid fa-boxes-stacked"></i>
+                                </div>
+                                <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full">Stock</span>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-4">Bodega Stock Items</p>
+                            <h3 id="stat-total-items" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="bg-slate-50 hover:bg-white border border-slate-200/80 rounded-2xl p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 group">
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                                </div>
+                                <span class="text-[10px] font-bold bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-full">Orders</span>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-4">Site Purchase Orders</p>
+                            <h3 id="stat-total-pos" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="bg-slate-50 hover:bg-white border border-slate-200/80 rounded-2xl p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 group">
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-amber-600 group-hover:text-white transition-all">
+                                    <i class="fa-solid fa-tags"></i>
+                                </div>
+                                <span class="text-[10px] font-bold bg-amber-50 text-amber-600 px-2.5 py-1 rounded-full">Prices</span>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-4">Tracked Prices</p>
+                            <h3 id="stat-total-prices" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="bg-slate-50 hover:bg-white border border-slate-200/80 rounded-2xl p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 group">
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center font-bold text-lg group-hover:bg-purple-600 group-hover:text-white transition-all">
+                                    <i class="fa-solid fa-truck-field"></i>
+                                </div>
+                                <span class="text-[10px] font-bold bg-purple-50 text-purple-600 px-2.5 py-1 rounded-full">Vendors</span>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-4">Active Suppliers</p>
+                            <h3 id="stat-total-suppliers" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
+                        </div>
+                    </div>
+
+                    <!-- QUICK ACTIONS BAR -->
+                    <div class="bg-slate-50/80 border border-slate-100 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 no-print">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-amber-500"></i> Quick Actions
+                        </span>
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <button onclick="switchTab('inventory'); openStockOutModal();" class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl transition-all shadow-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-minus text-[10px]"></i> Stock Out
+                            </button>
+                            <button onclick="switchTab('inventory'); openInventoryModal();" class="px-3.5 py-2 bg-[#0088ff] hover:bg-blue-600 text-white font-semibold text-xs rounded-xl transition-all shadow-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus text-[10px]"></i> Add Product
+                            </button>
+                            <button onclick="switchTab('po'); openPOModal();" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-xl transition-all shadow-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-circle-plus text-[10px]"></i> Create PO
+                            </button>
+                            <button onclick="switchTab('prices'); openPriceModal();" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-xl transition-all shadow-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-tag text-[10px]"></i> Log Price
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TABLES GRID -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-2">
+                        <!-- Movement Log -->
+                        <div class="border border-slate-100 rounded-2xl p-5 bg-white shadow-xs space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-blue-500"></i> Recent Bodega Movement Log
+                                </h4>
+                                <button onclick="switchTab('inventory')" class="text-xs font-semibold text-blue-500 hover:text-blue-700 no-print">View All &rarr;</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-50 text-slate-400 uppercase font-bold border-b border-slate-100">
+                                        <tr>
+                                            <th class="p-3">Type</th>
+                                            <th class="p-3">Material</th>
+                                            <th class="p-3">Qty</th>
+                                            <th class="p-3">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-stock-logs" class="divide-y divide-slate-50"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Purchase Orders Log -->
+                        <div class="border border-slate-100 rounded-2xl p-5 bg-white shadow-xs space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-receipt text-emerald-500"></i> Recent Site Purchase Orders
+                                </h4>
+                                <button onclick="switchTab('po')" class="text-xs font-semibold text-emerald-500 hover:text-emerald-700 no-print">View All &rarr;</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-50 text-slate-400 uppercase font-bold border-b border-slate-100">
+                                        <tr>
+                                            <th class="p-3">PO #</th>
+                                            <th class="p-3">Site</th>
+                                            <th class="p-3">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-po-list" class="divide-y divide-slate-50"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ================= TAB 2: BODEGA INVENTORY ================= -->
+                <div id="tab-inventory" class="space-y-6 hidden">
+                    <!-- FILTER BAR & BUTTONS -->
+                    <div class="flex flex-col lg:flex-row items-center justify-between gap-4 no-print">
+                        <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                            <!-- SEARCH INPUT -->
+                            <div class="relative w-full sm:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="text" id="inventory-search" oninput="renderApp()" placeholder="Search by name or SKU..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                            </div>
+
+                            <!-- CATEGORY DROPDOWN -->
+                            <select id="inventory-category-filter" onchange="renderApp()" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                                <option value="All">All Categories</option>
+                                <option value="Aggregates">Aggregates</option>
+                                <option value="Metals">Metals</option>
+                                <option value="Office Supplies">Office Supplies</option>
+                            </select>
+
+                            <!-- STOCK IN / STOCK OUT DROPDOWN FILTER -->
+                            <select id="inventory-movement-filter" onchange="renderApp()" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all">
+                                <option value="All">All Movements</option>
+                                <option value="In">Stock In Only</option>
+                                <option value="Out">Stock Out Only</option>
+                            </select>
+                        </div>
+
+                        <!-- ACTION BUTTONS -->
+                        <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-end">
+                            <button onclick="openStockOutModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-amber-500/20 text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-minus text-xs"></i> Stock Out
+                            </button>
+
+                            <button onclick="openInventoryModal()" class="bg-[#0088ff] hover:bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-blue-500/20 text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-plus text-xs"></i> Add New Product
+                            </button>
+
+                            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-print text-xs"></i> Print
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- INVENTORY TABLE -->
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100 tracking-wider">
+                                    <th class="pb-4 pt-2 font-semibold">SKU</th>
+                                    <th class="pb-4 pt-2 font-semibold">PRODUCT NAME</th>
+                                    <th class="pb-4 pt-2 font-semibold">CATEGORY</th>
+                                    <th class="pb-4 pt-2 font-semibold">CURRENT STOCK</th>
+                                    <th class="pb-4 pt-2 font-semibold">UNIT</th>
+                                    <th class="pb-4 pt-2 font-semibold">STATUS</th>
+                                    <th class="pb-4 pt-2 font-semibold text-center no-print">QUICK STOCK ADJUST</th>
+                                    <th class="pb-4 pt-2 font-semibold text-right no-print">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-table-body" class="divide-y divide-slate-50 text-xs"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= TAB 3: SITE PURCHASE ORDERS ================= -->
+                <div id="tab-po" class="space-y-6 hidden">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
+                        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                            <!-- SEARCH INPUT FOR PO -->
+                            <div class="relative w-full sm:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="text" id="po-search" oninput="renderApp()" placeholder="Search PO #, site, material..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                            </div>
+
+                            <!-- PERIOD DROPDOWN -->
+                            <select id="report-period-filter" onchange="renderApp()" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-full sm:w-auto">
+                                <option value="all">All Periods</option>
+                                <option value="weekly">Weekly (Last 7 Days)</option>
+                                <option value="monthly">Monthly (Last 30 Days)</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                            <button onclick="openPOModal()" class="bg-[#0088ff] hover:bg-blue-600 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-blue-500/20 text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-plus text-xs"></i> Create Site PO
+                            </button>
+                            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-print text-xs"></i> Print
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100 tracking-wider">
+                                    <th class="pb-4 pt-2 font-semibold">PO #</th>
+                                    <th class="pb-4 pt-2 font-semibold">PROJECT SITE</th>
+                                    <th class="pb-4 pt-2 font-semibold">SUPPLIER</th>
+                                    <th class="pb-4 pt-2 font-semibold">MATERIALS / ITEMS</th>
+                                    <th class="pb-4 pt-2 font-semibold">QTY</th>
+                                    <th class="pb-4 pt-2 font-semibold">UNIT PRICE</th>
+                                    <th class="pb-4 pt-2 font-semibold">DATE</th>
+                                    <th class="pb-4 pt-2 font-semibold">TOTAL AMOUNT</th>
+                                    <th class="pb-4 pt-2 font-semibold text-right no-print">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="po-table-body" class="divide-y divide-slate-50 text-xs"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= TAB 4: PER-SITE PRICE TRACKER ================= -->
+                <div id="tab-prices" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center no-print">
+                        <p class="text-xs text-slate-500">Track and log purchasing price history per date and supplier.</p>
+                        <div class="flex items-center gap-2.5">
+                            <button onclick="openPriceModal()" class="bg-[#0088ff] hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-blue-500/20 text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-plus text-xs"></i> Add Price Record
+                            </button>
+                            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-print text-xs"></i> Print
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100 tracking-wider">
+                                    <th class="pb-4 pt-2 font-semibold">DATE LOGGED</th>
+                                    <th class="pb-4 pt-2 font-semibold">SUPPLIER</th>
+                                    <th class="pb-4 pt-2 font-semibold">MATERIAL NAME</th>
+                                    <th class="pb-4 pt-2 font-semibold">UNIT PRICE</th>
+                                    <th class="pb-4 pt-2 font-semibold text-right no-print">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prices-table-body" class="divide-y divide-slate-50 text-xs"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= TAB 5: SUPPLIERS DIRECTORY ================= -->
+                <div id="tab-suppliers" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center no-print">
+                        <p class="text-xs text-slate-500">Directory of verified material suppliers and vendors.</p>
+                        <div class="flex items-center gap-2.5">
+                            <button onclick="openSupplierModal()" class="bg-[#0088ff] hover:bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-blue-500/20 text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-plus text-xs"></i> Add Supplier
+                            </button>
+                            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md text-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-print text-xs"></i> Print
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto w-full">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[11px] font-bold uppercase text-slate-400 border-b border-slate-100 tracking-wider">
+                                    <th class="pb-4 pt-2 font-semibold">SUPPLIER NAME</th>
+                                    <th class="pb-4 pt-2 font-semibold">CONTACT PERSON</th>
+                                    <th class="pb-4 pt-2 font-semibold">PHONE NUMBER</th>
+                                    <th class="pb-4 pt-2 font-semibold">EMAIL ADDRESS</th>
+                                    <th class="pb-4 pt-2 font-semibold text-right no-print">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="suppliers-table-body" class="divide-y divide-slate-50 text-xs"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MODALS ================= -->
+    <!-- Stock Out Modal -->
+    <div id="modal-stock-out" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 space-y-6">
+            <h3 class="text-lg font-bold text-slate-800">Stock Out Material (To Site)</h3>
+            <form id="form-stock-out" onsubmit="saveStockOut(event)" class="space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Type Product Name</label>
+                    <input type="text" id="so-product-input" list="product-suggestions" required placeholder="Type product name (e.g. SEA...)" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/20">
+                    <datalist id="product-suggestions"></datalist>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Quantity to Issue</label>
+                    <input type="number" id="so-qty" required min="1" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/20" placeholder="1">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Destination / Project Site</label>
+                    <input type="text" id="so-destination" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/20" placeholder="e.g. Site A - Vigan Project">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal('modal-stock-out')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition-all">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl text-xs shadow-md shadow-amber-500/20 transition-all">Confirm Stock Out</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inventory Modal -->
+    <div id="modal-inventory" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 space-y-6">
+            <h3 id="inv-modal-title" class="text-lg font-bold text-slate-800">Add / Update Product</h3>
+            <form id="form-inventory" onsubmit="saveInventoryItem(event)" class="space-y-4">
+                <input type="hidden" id="inv-edit-id">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">SKU / Code (Auto Generated)</label>
+                    <input type="text" id="inv-sku" readonly class="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-600 cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Product Name</label>
+                    <input type="text" id="inv-name" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. SEALANT WHITE">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Category</label>
+                    <input type="text" id="inv-category" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. Office Supplies, Aggregates">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Current Stock</label>
+                        <input type="number" id="inv-qty" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="20">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Unit</label>
+                        <input type="text" id="inv-unit" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Pcs">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal('modal-inventory')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition-all">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-[#0088ff] hover:bg-blue-600 text-white font-semibold rounded-xl text-xs shadow-md shadow-blue-500/20 transition-all">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PO Modal -->
+    <div id="modal-po" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 space-y-6">
+            <h3 id="po-modal-title" class="text-lg font-bold text-slate-800">Create Site Purchase Order</h3>
+            <form id="form-po" onsubmit="savePOItem(event)" class="space-y-4">
+                <input type="hidden" id="po-edit-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">PO Number</label>
+                        <input type="text" id="po-num" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. PO-6131">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Order Date</label>
+                        <input type="date" id="po-date" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Project Site</label>
+                    <input type="text" id="po-site" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Site A - Vigan Project">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Supplier</label>
+                    <input type="text" id="po-supplier" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Supplier Depot">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Material Name</label>
+                    <input type="text" id="po-material" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="e.g. Sealant White">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Quantity</label>
+                        <input type="number" id="po-qty" required min="1" oninput="calculatePOTotal()" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="10">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Unit Price (₱)</label>
+                        <input type="number" step="0.01" id="po-unit-price" required min="0" oninput="calculatePOTotal()" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Total Amount (₱)</label>
+                        <input type="number" step="0.01" id="po-amount" readonly class="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-emerald-600 cursor-not-allowed">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal('modal-po')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition-all">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-[#0088ff] hover:bg-blue-600 text-white font-semibold rounded-xl text-xs shadow-md shadow-blue-500/20 transition-all">Save PO</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Price Tracker Modal -->
+    <div id="modal-price" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 space-y-6">
+            <h3 id="price-modal-title" class="text-lg font-bold text-slate-800">Add Material Price Record</h3>
+            <form id="form-price" onsubmit="savePriceItem(event)" class="space-y-4">
+                <input type="hidden" id="price-edit-id">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Date Logged</label>
+                    <input type="date" id="pr-date" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Supplier</label>
+                    <input type="text" id="pr-supplier" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Supplier Name">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Material Name</label>
+                    <input type="text" id="pr-material" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="Material Name">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Unit Price (₱)</label>
+                    <input type="number" step="0.01" id="pr-price" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20" placeholder="0.00">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal('modal-price')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition-all">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-[#0088ff] hover:bg-blue-600 text-white font-semibold rounded-xl text-xs shadow-md shadow-blue-500/20 transition-all">Save Price</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supplier Modal -->
+    <div id="modal-supplier" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 space-y-6">
+            <h3 id="supplier-modal-title" class="text-lg font-bold text-slate-800">Add Supplier</h3>
+            <form id="form-supplier" onsubmit="saveSupplierItem(event)" class="space-y-4">
+                <input type="hidden" id="supplier-edit-id">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Supplier Name</label>
+                    <input type="text" id="sup-name" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Contact Person</label>
+                    <input type="text" id="sup-contact" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Phone Number</label>
+                    <input type="text" id="sup-phone" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 tracking-wider">Email Address</label>
+                    <input type="email" id="sup-email" required class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeModal('modal-supplier')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition-all">Cancel</button>
+                    <button type="submit" class="px-5 py-2.5 bg-[#0088ff] hover:bg-blue-600 text-white font-semibold rounded-xl text-xs shadow-md shadow-blue-500/20 transition-all">Save Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT SYSTEM LOGIC ================= -->
+    <script>
+        const defaultData = {
+            inventory: [
+                { id: 1, sku: 'SKU-6131', name: 'SEALANT WHITE', category: 'Office Supplies', qty: 20, unit: 'Pcs' }
+            ],
+            stockLogs: [
+                { type: 'Stock In', material: 'SEALANT WHITE', qty: 20, source: 'Initial Entry', date: '2026-10-12' }
+            ],
+            purchaseOrders: [
+                { id: 1, poNum: 'PO-6131', site: 'Site A - Vigan Commercial Center', supplier: 'Ilocos Builders Depot', material: 'Sealant White', qty: 200, unitPrice: 226.00, date: '2026-10-08', amount: 45200 }
+            ],
+            prices: [
+                { id: 1, supplier: 'Ilocos Builders Depot', material: 'SEALANT WHITE', price: 185.00, date: '2026-10-08' }
+            ],
+            suppliers: [
+                { id: 1, name: 'Ilocos Builders Depot', contact: 'Juan Dela Cruz', phone: '0917-123-4567', email: 'sales@ilocosbuilders.com' }
+            ]
+        };
+
+        let appData = JSON.parse(localStorage.getItem('supply_chain_hub_data')) || defaultData;
+
+        function saveData() {
+            localStorage.setItem('supply_chain_hub_data', JSON.stringify(appData));
+            renderApp();
+        }
+
+        function resetData() {
+            if(confirm('Reset all data to default demo records?')) {
+                appData = JSON.parse(JSON.stringify(defaultData));
+                saveData();
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('aside nav a').forEach(el => {
+                el.className = "flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-400 hover:bg-[#162244] hover:text-white";
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.className = "flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all bg-[#0088ff] text-white shadow-md";
+            }
+
+            const titles = {
+                dashboard: 'Dashboard Overview',
+                inventory: 'Bodega Inventory Management',
+                po: 'Site Purchase Orders',
+                prices: 'Per-Site Price Tracker',
+                suppliers: 'Suppliers Directory'
+            };
+            document.getElementById('page-title').innerText = titles[tabId] || 'System Hub';
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
+
+        // --- STOCK OUT MODAL ---
+        function openStockOutModal() {
+            const dataListEl = document.getElementById('product-suggestions');
+            dataListEl.innerHTML = appData.inventory.map(i => `<option value="${i.name}">Available Stock: ${i.qty} ${i.unit}</option>`).join('');
+            document.getElementById('form-stock-out').reset();
+            openModal('modal-stock-out');
+        }
+
+        function saveStockOut(e) {
+            e.preventDefault();
+            const typedName = document.getElementById('so-product-input').value.trim();
+            const qty = parseInt(document.getElementById('so-qty').value);
+            const destination = document.getElementById('so-destination').value;
+
+            const item = appData.inventory.find(i => i.name.toLowerCase() === typedName.toLowerCase());
+            if(!item) {
+                alert('Product not found in inventory! Please type a valid product name.');
+                return;
+            }
+
+            if(item.qty < qty) {
+                alert(`Insufficient stock available! Only ${item.qty} ${item.unit} remaining.`);
+                return;
+            }
+
+            item.qty -= qty;
+            appData.stockLogs.unshift({
+                type: 'Stock Out',
+                material: item.name,
+                qty: qty,
+                source: destination,
+                date: new Date().toISOString().split('T')[0]
+            });
+
+            saveData();
+            closeModal('modal-stock-out');
+        }
+
+        // QUICK STOCK ADJUSTMENT (+ / -)
+        function adjustStock(id, delta) {
+            const item = appData.inventory.find(i => i.id === id);
+            if(item) {
+                item.qty = Math.max(0, item.qty + delta);
+                appData.stockLogs.unshift({
+                    type: delta > 0 ? 'Stock In' : 'Stock Out',
+                    material: item.name,
+                    qty: Math.abs(delta),
+                    source: delta > 0 ? 'Bodega Quick Add' : 'Bodega Quick Issue',
+                    date: new Date().toISOString().split('T')[0]
+                });
+                saveData();
+            }
+        }
+
+        // --- INVENTORY ACTIONS ---
+        function openInventoryModal(id = null) {
+            document.getElementById('form-inventory').reset();
+            document.getElementById('inv-edit-id').value = '';
+            
+            if(id) {
+                document.getElementById('inv-modal-title').innerText = 'Edit Product';
+                const item = appData.inventory.find(i => i.id === id);
+                if(item) {
+                    document.getElementById('inv-edit-id').value = item.id;
+                    document.getElementById('inv-sku').value = item.sku;
+                    document.getElementById('inv-name').value = item.name;
+                    document.getElementById('inv-category').value = item.category;
+                    document.getElementById('inv-qty').value = item.qty;
+                    document.getElementById('inv-unit').value = item.unit;
+                }
+            } else {
+                document.getElementById('inv-modal-title').innerText = 'Add New Product';
+                const nextId = appData.inventory.length > 0 ? Math.max(...appData.inventory.map(i => i.id)) + 1 : 1;
+                document.getElementById('inv-sku').value = `SKU-${6130 + nextId}`;
+            }
+            openModal('modal-inventory');
+        }
+
+        function saveInventoryItem(e) {
+            e.preventDefault();
+            const editId = document.getElementById('inv-edit-id').value;
+            const sku = document.getElementById('inv-sku').value;
+            const name = document.getElementById('inv-name').value;
+            const category = document.getElementById('inv-category').value;
+            const qty = parseInt(document.getElementById('inv-qty').value);
+            const unit = document.getElementById('inv-unit').value;
+
+            if(editId) {
+                const item = appData.inventory.find(i => i.id == editId);
+                if(item) {
+                    item.name = name;
+                    item.category = category;
+                    item.qty = qty;
+                    item.unit = unit;
+                }
+            } else {
+                const newItem = { id: Date.now(), sku, name, category, qty, unit };
+                appData.inventory.push(newItem);
+                appData.stockLogs.unshift({ type: 'Stock In', material: name, qty, source: 'Initial Entry', date: new Date().toISOString().split('T')[0] });
+            }
+            saveData();
+            closeModal('modal-inventory');
+        }
+
+        function deleteInventoryItem(id) {
+            if(confirm('Delete this product entry?')) {
+                appData.inventory = appData.inventory.filter(i => i.id !== id);
+                saveData();
+            }
+        }
+
+        // --- PO ACTIONS ---
+        function openPOModal(id = null) {
+            document.getElementById('form-po').reset();
+            document.getElementById('po-edit-id').value = '';
+            
+            if(id) {
+                document.getElementById('po-modal-title').innerText = 'Edit Site Purchase Order';
+                const po = appData.purchaseOrders.find(p => p.id === id);
+                if(po) {
+                    document.getElementById('po-edit-id').value = po.id;
+                    document.getElementById('po-num').value = po.poNum;
+                    document.getElementById('po-site').value = po.site;
+                    document.getElementById('po-supplier').value = po.supplier;
+                    document.getElementById('po-material').value = po.material || '';
+                    document.getElementById('po-qty').value = po.qty || 1;
+                    document.getElementById('po-unit-price').value = po.unitPrice || 0;
+                    document.getElementById('po-amount').value = po.amount || 0;
+                    document.getElementById('po-date').value = po.date;
+                }
+            } else {
+                document.getElementById('po-modal-title').innerText = 'Create Site Purchase Order';
+                document.getElementById('po-date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('po-amount').value = '0.00';
+            }
+            openModal('modal-po');
+        }
+
+        function calculatePOTotal() {
+            const qty = parseFloat(document.getElementById('po-qty').value) || 0;
+            const unitPrice = parseFloat(document.getElementById('po-unit-price').value) || 0;
+            const total = qty * unitPrice;
+            document.getElementById('po-amount').value = total.toFixed(2);
+        }
+
+        function savePOItem(e) {
+            e.preventDefault();
+            const editId = document.getElementById('po-edit-id').value;
+            const poNum = document.getElementById('po-num').value;
+            const site = document.getElementById('po-site').value;
+            const supplier = document.getElementById('po-supplier').value;
+            const material = document.getElementById('po-material').value;
+            const qty = parseInt(document.getElementById('po-qty').value) || 0;
+            const unitPrice = parseFloat(document.getElementById('po-unit-price').value) || 0;
+            const date = document.getElementById('po-date').value;
+            const amount = parseFloat(document.getElementById('po-amount').value) || 0;
+
+            if(editId) {
+                const po = appData.purchaseOrders.find(p => p.id == editId);
+                if(po) {
+                    po.poNum = poNum;
+                    po.site = site;
+                    po.supplier = supplier;
+                    po.material = material;
+                    po.qty = qty;
+                    po.unitPrice = unitPrice;
+                    po.date = date;
+                    po.amount = amount;
+                }
+            } else {
+                appData.purchaseOrders.push({ id: Date.now(), poNum, site, supplier, material, qty, unitPrice, date, amount });
+            }
+            saveData();
+            closeModal('modal-po');
+        }
+
+        function deletePO(id) {
+            if(confirm('Delete PO?')) {
+                appData.purchaseOrders = appData.purchaseOrders.filter(p => p.id !== id);
+                saveData();
+            }
+        }
+
+        // --- PRICE ACTIONS ---
+        function openPriceModal(id = null) {
+            document.getElementById('form-price').reset();
+            document.getElementById('price-edit-id').value = '';
+
+            if(id) {
+                document.getElementById('price-modal-title').innerText = 'Edit Price Record';
+                const pr = appData.prices.find(p => p.id === id);
+                if(pr) {
+                    document.getElementById('price-edit-id').value = pr.id;
+                    document.getElementById('pr-date').value = pr.date || new Date().toISOString().split('T')[0];
+                    document.getElementById('pr-supplier').value = pr.supplier;
+                    document.getElementById('pr-material').value = pr.material;
+                    document.getElementById('pr-price').value = pr.price;
+                }
+            } else {
+                document.getElementById('price-modal-title').innerText = 'Add Material Price Record';
+                document.getElementById('pr-date').value = new Date().toISOString().split('T')[0];
+            }
+            openModal('modal-price');
+        }
+
+        function savePriceItem(e) {
+            e.preventDefault();
+            const editId = document.getElementById('price-edit-id').value;
+            const date = document.getElementById('pr-date').value;
+            const supplier = document.getElementById('pr-supplier').value;
+            const material = document.getElementById('pr-material').value;
+            const price = parseFloat(document.getElementById('pr-price').value);
+
+            if(editId) {
+                const pr = appData.prices.find(p => p.id == editId);
+                if(pr) {
+                    pr.date = date;
+                    pr.supplier = supplier;
+                    pr.material = material;
+                    pr.price = price;
+                }
+            } else {
+                appData.prices.push({ id: Date.now(), date, supplier, material, price });
+            }
+            saveData();
+            closeModal('modal-price');
+        }
+
+        function deletePrice(id) {
+            if(confirm('Delete record?')) {
+                appData.prices = appData.prices.filter(p => p.id !== id);
+                saveData();
+            }
+        }
+
+        // --- SUPPLIER ACTIONS ---
+        function openSupplierModal(id = null) {
+            document.getElementById('form-supplier').reset();
+            document.getElementById('supplier-edit-id').value = '';
+
+            if(id) {
+                document.getElementById('supplier-modal-title').innerText = 'Edit Supplier';
+                const s = appData.suppliers.find(sup => sup.id === id);
+                if(s) {
+                    document.getElementById('supplier-edit-id').value = s.id;
+                    document.getElementById('sup-name').value = s.name;
+                    document.getElementById('sup-contact').value = s.contact;
+                    document.getElementById('sup-phone').value = s.phone;
+                    document.getElementById('sup-email').value = s.email;
+                }
+            } else {
+                document.getElementById('supplier-modal-title').innerText = 'Add Supplier';
+            }
+            openModal('modal-supplier');
+        }
+
+        function saveSupplierItem(e) {
+            e.preventDefault();
+            const editId = document.getElementById('supplier-edit-id').value;
+            const name = document.getElementById('sup-name').value;
+            const contact = document.getElementById('sup-contact').value;
+            const phone = document.getElementById('sup-phone').value;
+            const email = document.getElementById('sup-email').value;
+
+            if(editId) {
+                const s = appData.suppliers.find(sup => sup.id == editId);
+                if(s) {
+                    s.name = name;
+                    s.contact = contact;
+                    s.phone = phone;
+                    s.email = email;
+                }
+            } else {
+                appData.suppliers.push({ id: Date.now(), name, contact, phone, email });
+            }
+            saveData();
+            closeModal('modal-supplier');
+        }
+
+        function deleteSupplier(id) {
+            if(confirm('Delete supplier?')) {
+                appData.suppliers = appData.suppliers.filter(s => s.id !== id);
+                saveData();
+            }
+        }
+
+        // --- RENDER ALL VIEWS ---
+        function renderApp() {
+            // Dashboard Stats
+            document.getElementById('stat-total-items').innerText = appData.inventory.length;
+            document.getElementById('stat-total-pos').innerText = appData.purchaseOrders.length;
+            document.getElementById('stat-total-prices').innerText = appData.prices.length;
+            document.getElementById('stat-total-suppliers').innerText = appData.suppliers.length;
+
+            const totalSpend = appData.purchaseOrders.reduce((sum, po) => sum + (po.amount || 0), 0);
+            document.getElementById('stat-total-spending').innerText = `₱${totalSpend.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+            // Logs
+            document.getElementById('dashboard-stock-logs').innerHTML = appData.stockLogs.slice(0, 5).map(l => `
+                <tr class="hover:bg-slate-50 transition-all">
+                    <td class="p-3"><span class="px-2.5 py-1 text-[10px] font-bold rounded-lg ${l.type === 'Stock In' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}">${l.type}</span></td>
+                    <td class="p-3 font-semibold text-slate-800">${l.material}</td>
+                    <td class="p-3 font-bold text-slate-900">${l.qty}</td>
+                    <td class="p-3 text-slate-400 text-[10px]">${l.date}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('dashboard-po-list').innerHTML = appData.purchaseOrders.slice(0, 5).map(p => `
+                <tr class="hover:bg-slate-50 transition-all">
+                    <td class="p-3 font-bold text-slate-800">${p.poNum}</td>
+                    <td class="p-3 text-slate-600">${p.site}</td>
+                    <td class="p-3 font-extrabold text-emerald-600">₱${(p.amount || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                </tr>
+            `).join('');
+
+            // Inventory Table Render
+            const searchVal = document.getElementById('inventory-search') ? document.getElementById('inventory-search').value.toLowerCase() : '';
+            const catFilter = document.getElementById('inventory-category-filter') ? document.getElementById('inventory-category-filter').value : 'All';
+            const moveFilter = document.getElementById('inventory-movement-filter') ? document.getElementById('inventory-movement-filter').value : 'All';
+
+            const invBody = document.getElementById('inventory-table-body');
+            invBody.innerHTML = appData.inventory
+                .filter(i => {
+                    const matchesSearch = i.name.toLowerCase().includes(searchVal) || i.sku.toLowerCase().includes(searchVal);
+                    const matchesCat = (catFilter === 'All' || i.category === catFilter);
+                    let matchesMove = true;
+                    if(moveFilter === 'In') matchesMove = i.qty > 0;
+                    if(moveFilter === 'Out') matchesMove = i.qty === 0;
+                    return matchesSearch && matchesCat && matchesMove;
+                })
+                .map(i => {
+                    const isOptimal = i.qty > 0;
+                    const statusBadge = isOptimal 
+                        ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full font-bold text-[11px]"><i class="fa-solid fa-check text-[10px]"></i> Optimal</span>`
+                        : `<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 rounded-full font-bold text-[11px]"><i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Out of Stock</span>`;
+
+                    return `
+                        <tr class="hover:bg-slate-50/80 transition-all">
+                            <td class="py-4 font-mono font-bold text-slate-400 text-[11px]">${i.sku}</td>
+                            <td class="py-4 font-bold text-slate-900 tracking-wide">${i.name}</td>
+                            <td class="py-4"><span class="px-3 py-1 bg-slate-100 text-slate-600 font-medium rounded-lg text-[11px]">${i.category}</span></td>
+                            <td class="py-4 font-extrabold text-slate-900 text-sm">${i.qty}</td>
+                            <td class="py-4 text-slate-500 font-medium">${i.unit}</td>
+                            <td class="py-4">${statusBadge}</td>
+                            <td class="py-4 text-center no-print">
+                                <div class="inline-flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-2xs">
+                                    <button onclick="adjustStock(${i.id}, -1)" class="px-2.5 py-1 text-slate-500 hover:bg-slate-100 font-bold border-r border-slate-200">-</button>
+                                    <button onclick="adjustStock(${i.id}, 1)" class="px-2.5 py-1 text-slate-500 hover:bg-slate-100 font-bold">+</button>
+                                </div>
+                            </td>
+                            <td class="py-4 text-right space-x-2 no-print">
+                                <button onclick="openInventoryModal(${i.id})" class="text-slate-400 hover:text-slate-700 transition-all p-1" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button onclick="deleteInventoryItem(${i.id})" class="text-slate-400 hover:text-rose-600 transition-all p-1" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            // PO Table Render
+            const poSearchVal = document.getElementById('po-search') ? document.getElementById('po-search').value.toLowerCase() : '';
+            const periodFilter = document.getElementById('report-period-filter') ? document.getElementById('report-period-filter').value : 'all';
+            const now = new Date();
+
+            document.getElementById('po-table-body').innerHTML = appData.purchaseOrders
+                .filter(p => {
+                    const matchesPoSearch = p.poNum.toLowerCase().includes(poSearchVal) || 
+                                           p.site.toLowerCase().includes(poSearchVal) || 
+                                           p.supplier.toLowerCase().includes(poSearchVal) ||
+                                           (p.material && p.material.toLowerCase().includes(poSearchVal));
+
+                    if (!matchesPoSearch) return false;
+
+                    if (periodFilter === 'all') return true;
+                    if (!p.date) return false;
+
+                    const poDate = new Date(p.date);
+                    const diffInDays = (now - poDate) / (1000 * 60 * 60 * 24);
+
+                    if (periodFilter === 'weekly') {
+                        return diffInDays >= 0 && diffInDays <= 7;
+                    }
+                    if (periodFilter === 'monthly') {
+                        return diffInDays >= 0 && diffInDays <= 30;
+                    }
+                    return true;
+                })
+                .map(p => `
+                    <tr class="hover:bg-slate-50/80 transition-all">
+                        <td class="py-4 font-bold text-slate-900">${p.poNum}</td>
+                        <td class="py-4 font-medium text-slate-700">${p.site}</td>
+                        <td class="py-4 text-slate-600">${p.supplier}</td>
+                        <td class="py-4 font-bold text-slate-800">${p.material || 'N/A'}</td>
+                        <td class="py-4 font-semibold text-slate-700">${p.qty || 0}</td>
+                        <td class="py-4 font-medium text-slate-600">₱${(p.unitPrice || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="py-4 text-slate-500 font-medium">${p.date}</td>
+                        <td class="py-4 font-extrabold text-emerald-600">₱${(p.amount || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                        <td class="py-4 text-right space-x-2 no-print">
+                            <button onclick="openPOModal(${p.id})" class="text-slate-400 hover:text-slate-700 p-1"><i class="fa-regular fa-pen-to-square"></i></button>
+                            <button onclick="deletePO(${p.id})" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-regular fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            // Price Table Render
+            document.getElementById('prices-table-body').innerHTML = appData.prices.map(pr => `
+                <tr class="hover:bg-slate-50/80 transition-all">
+                    <td class="py-4 text-slate-500 font-medium">${pr.date || 'N/A'}</td>
+                    <td class="py-4 text-slate-600 font-semibold">${pr.supplier}</td>
+                    <td class="py-4 font-bold text-slate-900">${pr.material}</td>
+                    <td class="py-4 font-extrabold text-slate-900">₱${pr.price.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                    <td class="py-4 text-right space-x-2 no-print">
+                        <button onclick="openPriceModal(${pr.id})" class="text-slate-400 hover:text-slate-700 p-1"><i class="fa-regular fa-pen-to-square"></i></button>
+                        <button onclick="deletePrice(${pr.id})" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-regular fa-trash-can"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Suppliers Table Render
+            document.getElementById('suppliers-table-body').innerHTML = appData.suppliers.map(s => `
+                <tr class="hover:bg-slate-50/80 transition-all">
+                    <td class="py-4 font-bold text-slate-900">${s.name}</td>
+                    <td class="py-4 text-slate-700">${s.contact}</td>
+                    <td class="py-4 text-slate-600">${s.phone}</td>
+                    <td class="py-4 text-slate-600">${s.email}</td>
+                    <td class="py-4 text-right space-x-2 no-print">
+                        <button onclick="openSupplierModal(${s.id})" class="text-slate-400 hover:text-slate-700 p-1"><i class="fa-regular fa-pen-to-square"></i></button>
+                        <button onclick="deleteSupplier(${s.id})" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-regular fa-trash-can"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.onload = function() {
+            switchTab('dashboard');
+            renderApp();
+        };
+    </script>
+</body>
+</html>
